@@ -1,4 +1,3 @@
-import bodyParser from 'body-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { json, Router, Express, Request, Response, NextFunction } from 'express';
@@ -11,7 +10,6 @@ const router = Router();
 
 export const init = (app: Express) => {
    app.use(json());
-   app.use(bodyParser.json());
    app.use(cors());
 
    app.use(URL_PREFIX, router);
