@@ -11,7 +11,7 @@ const routeSchema = new mongoose.Schema({
       required: [true, 'Destination must be provided'],
    },
 
-   fareprice: {
+   farePrice: {
       type: Number,
    },
 });
