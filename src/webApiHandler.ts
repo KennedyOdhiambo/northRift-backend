@@ -2,6 +2,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { json, Router, Express, Request, Response, NextFunction } from 'express';
 import { Consts } from './lib/const';
+import { userRouter } from './routes/userRoutes';
 
 dotenv.config({ path: './config.env' });
 const URL_PREFIX = process.env.URL_PREFIX || '';
@@ -12,13 +13,14 @@ export const init = (app: Express) => {
    app.use(json());
    app.use(cors());
 
+   router.use('/users', userRouter);
+
    app.use(URL_PREFIX, router);
 
-   router.get('/', (req, res) => {
+   app.all('*', (req, res, next) => {
       res.status(404).json({
-         code: Consts.resCodeFail,
-         title: 'Not Found!',
-         message: 'The resource you are looking for cannot be found',
+         status: Consts.resCodeFail,
+         message: `Cant find ${req.originalUrl} on the server`,
       });
    });
 
