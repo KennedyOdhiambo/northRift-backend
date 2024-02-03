@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
 
 const userSchema = new mongoose.Schema({
    fullName: {
@@ -22,6 +23,21 @@ const userSchema = new mongoose.Schema({
       enum: ['active', 'deleted'],
       default: 'active',
    },
+
+   role: {
+      type: String,
+      enum: ['customer', 'admin'],
+      required: [true],
+      default: 'customer',
+   },
+});
+
+userSchema.pre('save', async function (next) {
+   if (this.isModified('password')) {
+      const salt = await bcrypt.genSalt();
+      this.password = await bcrypt.hash(this.password, salt);
+   }
+   next();
 });
 
 export const User = mongoose.model('User', userSchema);
