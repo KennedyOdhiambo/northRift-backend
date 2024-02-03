@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import { json, Router, Express, Request, Response, NextFunction } from 'express';
 import { Consts } from './lib/const';
 import { userRouter } from './routes/userRoutes';
+import { shuttleRouter } from './routes/shuttleRoutes';
 
 dotenv.config({ path: './config.env' });
 const URL_PREFIX = process.env.URL_PREFIX || '';
@@ -14,6 +15,7 @@ export const init = (app: Express) => {
    app.use(cors());
 
    router.use('/users', userRouter);
+   router.use('/shuttle', shuttleRouter);
 
    app.use(URL_PREFIX, router);
 
