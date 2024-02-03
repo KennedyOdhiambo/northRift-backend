@@ -9,6 +9,11 @@ const bookingSchema = new mongoose.Schema({
    customers: {
       customerName: String,
    },
+
+   carDetails: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'shuttle',
+   },
 });
 
 export const Booking = mongoose.model('Booking', bookingSchema);

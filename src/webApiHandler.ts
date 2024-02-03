@@ -2,6 +2,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { json, Router, Express, Request, Response, NextFunction } from 'express';
 import { Consts } from './lib/const';
+import { protect } from './controllers/authController';
 import { userRouter } from './routes/userRoutes';
 import { shuttleRouter } from './routes/shuttleRoutes';
 
@@ -15,7 +16,7 @@ export const init = (app: Express) => {
    app.use(cors());
 
    router.use('/users', userRouter);
-   router.use('/shuttle', shuttleRouter);
+   router.use('/shuttle', protect, shuttleRouter);
 
    app.use(URL_PREFIX, router);
 
