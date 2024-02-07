@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const routeSchema = new mongoose.Schema({
+const pathSchema = new mongoose.Schema({
    from: {
       type: String,
       required: [true],
@@ -13,7 +13,13 @@ const routeSchema = new mongoose.Schema({
 
    farePrice: {
       type: Number,
+      required: true,
+   },
+
+   isActive: {
+      type: Boolean,
+      default: true,
    },
 });
 
-export const Route = mongoose.model('Route', routeSchema);
+export const Path = mongoose.model('Path', pathSchema);
