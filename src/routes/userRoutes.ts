@@ -7,6 +7,6 @@ export const userRouter = Router();
 userRouter
    .post('/create', userController.createUser)
    .get('/logIn', authController.logIn)
-   .get('/list', userController.listUsers)
-   .delete('/delete/:userId', userController.deleteUser)
-   .patch('/update/:userId', userController.updateUser);
+   .get('/list', authController.protect, userController.listUsers)
+   .delete('/delete/:userId', authController.protect, userController.deleteUser)
+   .patch('/update/:userId', authController.protect, userController.updateUser);

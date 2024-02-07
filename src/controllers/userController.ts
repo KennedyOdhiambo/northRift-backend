@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { Consts } from '../lib/const';
 import { User } from '../models/userModel';
+import handleError from '../lib/handleError';
 
 export const createUser = async (req: Request, res: Response) => {
    try {
@@ -16,11 +17,7 @@ export const createUser = async (req: Request, res: Response) => {
          message: 'User account succesfully created',
       });
    } catch (error: any) {
-      console.error(error);
-      return res.status(500).json({
-         status: Consts.resCodeFail,
-         message: error.message,
-      });
+      return handleError(error, res);
    }
 };
 
@@ -33,11 +30,7 @@ export const listUsers = async (req: Request, res: Response) => {
          data: users,
       });
    } catch (error: any) {
-      console.error(error);
-      return res.status(500).json({
-         status: Consts.resCodeFail,
-         message: 'Failed to list users',
-      });
+      return handleError(error, res);
    }
 };
 
@@ -50,7 +43,6 @@ export const updateUser = async (req: Request, res: Response) => {
       }
 
       const updates = req.body;
-
       if (!updates || Object.keys(updates).length === 0) {
          throw new Error('No updates provided');
       }
@@ -66,13 +58,7 @@ export const updateUser = async (req: Request, res: Response) => {
          message: 'User details successfully updated!',
       });
    } catch (error) {
-      if (error instanceof Error) {
-         return res.status(500).json({
-            status: Consts.resCodeFail,
-            message: error.message,
-         });
-      }
-      return error;
+      return handleError(error, res);
    }
 };
 
@@ -101,12 +87,6 @@ export const deleteUser = async (req: Request, res: Response) => {
          message: 'User deleted successfully',
       });
    } catch (error) {
-      if (error instanceof Error) {
-         return res.status(500).json({
-            status: Consts.resCodeFail,
-            message: error.message,
-         });
-      }
-      return error;
+      return handleError(error, res);
    }
 };

@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { Consts } from '../lib/const';
 import { Shuttle } from '../models/shuttleModel';
+import handleError from '../lib/handleError';
 
 export const addShuttle = async (req: Request, res: Response) => {
    const { numberPlate, driver } = req.body as { numberPlate: string; driver: string };
@@ -24,13 +25,7 @@ export const addShuttle = async (req: Request, res: Response) => {
          message: 'Shutlle succesfull added',
       });
    } catch (error) {
-      if (error instanceof Error) {
-         return res.status(500).json({
-            status: Consts.resCodeFail,
-            message: error.message,
-         });
-      }
-      return error;
+      return handleError(error, res);
    }
 };
 
@@ -55,13 +50,7 @@ export const updateShuttle = async (req: Request, res: Response) => {
          message: 'Shuttle succesfully updated',
       });
    } catch (error) {
-      if (error instanceof Error) {
-         return res.status(500).json({
-            status: Consts.resCodeFail,
-            message: error.message,
-         });
-         return error;
-      }
+      return handleError(error, res);
    }
 };
 
@@ -79,19 +68,12 @@ export const deleteShuttle = async (req: Request, res: Response) => {
       shuttle.status = 'deleted';
       await shuttle.save();
 
-      res.status(200).json({
+      return res.status(200).json({
          status: Consts.resCodeSuccess,
          message: 'Shuttle succesfully deleted',
       });
    } catch (error) {
-      if (error instanceof Error) {
-         return res.status(500).json({
-            status: Consts.resCodeFail,
-            message: error.message,
-         });
-
-         return error;
-      }
+      return handleError(error, res);
    }
 };
 
@@ -99,16 +81,11 @@ export const listShuttles = async (req: Request, res: Response) => {
    try {
       const shuttles = await Shuttle.find({ status: 'active' });
 
-      res.status(200).json({
+      return res.status(200).json({
          status: Consts.resCodeSuccess,
          data: shuttles,
       });
    } catch (error) {
-      if (error instanceof Error) {
-         return res.status(500).json({
-            status: Consts.resCodeFail,
-            message: error.message,
-         });
-      }
+      return handleError(error, res);
    }
 };
