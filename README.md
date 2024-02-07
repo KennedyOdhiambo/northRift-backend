@@ -21,10 +21,13 @@ npm install
 
 To start the server, run
 
+```sh
 npm start
+```
 
 ## Project structure
 
+```sh
 src/: This directory contains the source code of the project.
 app.ts: The entry point of the application.
 controllers/: This directory contains the controllers for the application.
@@ -35,6 +38,7 @@ webApiHandler.ts: This file handles the web API.
 logger.ts: This file handles logging.
 package.json: This file contains the list of project dependencies and scripts.
 tsconfig.json: This file contains the TypeScript compiler configuration.
+```
 
 ## Contact
 
