@@ -4,6 +4,7 @@ import { NextFunction, Request, Response } from 'express';
 import { User } from '../models/userModel';
 import bcrypt from 'bcrypt';
 import jwt, { Secret } from 'jsonwebtoken';
+import handleError from '../lib/handleError';
 
 dotenv.config();
 
@@ -17,7 +18,7 @@ export const logIn = async (req: Request, res: Response) => {
       if (!phoneNumber || !password) throw new Error('Phone number and password are required');
 
       const user = await User.findOne({ phoneNumber, status: 'active' }).select('+password');
-      if (!user) throw new Error('Invalid phoneNumber');
+      if (!user) throw new Error('User does not exist,please signup');
 
       const validPassword = await bcrypt.compare(password, user.password);
       if (!validPassword) throw new Error('Authentication failed,Invalid password');
@@ -34,13 +35,7 @@ export const logIn = async (req: Request, res: Response) => {
          },
       });
    } catch (error) {
-      if (error instanceof Error) {
-         return res.status(500).json({
-            status: Consts.resCodeFail,
-            message: error.message,
-         });
-      }
-      return error;
+      return handleError(error, res);
    }
 };
 
@@ -55,12 +50,6 @@ export const protect = async (req: AuthenticatedRequest, res: Response, next: Ne
 
       next();
    } catch (error) {
-      if (error instanceof Error) {
-         return res.status(401).json({
-            status: Consts.resCodeFail,
-            message: error.message,
-         });
-      }
-      return error;
+      return handleError(error, res);
    }
 };
