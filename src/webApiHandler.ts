@@ -6,6 +6,8 @@ import { protect } from './controllers/authController';
 import { userRouter } from './routes/userRoutes';
 import { shuttleRouter } from './routes/shuttleRoutes';
 import { bookingRouter } from './routes/bookingRoutes';
+import { pathRouter } from './routes/pathRoutes';
+import logger from './logger';
 
 dotenv.config({ path: './config.env' });
 const URL_PREFIX = process.env.URL_PREFIX || '';
@@ -19,10 +21,13 @@ export const init = (app: Express) => {
    router.use('/users', userRouter);
    router.use('/shuttle', protect, shuttleRouter);
    router.use('/booking', protect, bookingRouter);
+   router.use('/path', protect, pathRouter);
 
    app.use(URL_PREFIX, router);
 
    app.all('*', (req, res, next) => {
+      logger.error(`Error: Cant find ${req.originalUrl} on the server`);
+
       res.status(404).json({
          status: Consts.resCodeFail,
          message: `Cant find ${req.originalUrl} on the server`,
