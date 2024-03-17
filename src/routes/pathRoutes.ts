@@ -7,4 +7,5 @@ pathRouter
    .post('/create', pathController.addPath)
    .patch('/update/:id', pathController.updatePath)
    .get('/list', pathController.listPaths)
-   .delete('/delete/:id', pathController.deletePath);
+   .delete('/delete/:id', pathController.deletePath)
+   .get('/findByShuttleId/:shuttleId', pathController.findByShuttleId);

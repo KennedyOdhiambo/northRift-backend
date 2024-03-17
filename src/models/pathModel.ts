@@ -16,9 +16,24 @@ const pathSchema = new mongoose.Schema({
       required: true,
    },
 
-   isActive: {
-      type: Boolean,
-      default: true,
+   travelDate: {
+      type: Date,
+      required: true,
+   },
+
+   departureTime: {
+      type: Date,
+      required: true,
+   },
+
+   availableSeats: {
+      type: Number,
+      default: 0,
+   },
+
+   shuttle: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Shuttle',
    },
 });
 
