@@ -20,7 +20,7 @@ export const addShuttle = async (req: Request, res: Response) => {
 
       await shuttle.save();
 
-      res.status(201).json({
+      return res.status(201).json({
          status: Consts.resCodeSuccess,
          message: 'Shutlle succesfull added',
       });

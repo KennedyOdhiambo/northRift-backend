@@ -8,6 +8,7 @@ import { shuttleRouter } from './routes/shuttleRoutes';
 import { bookingRouter } from './routes/bookingRoutes';
 import { pathRouter } from './routes/pathRoutes';
 import logger from './logger';
+import { paymentRouter } from './routes/paymentRoutes';
 
 dotenv.config({ path: './config.env' });
 const URL_PREFIX = process.env.URL_PREFIX || '';
@@ -22,6 +23,7 @@ export const init = (app: Express) => {
    router.use('/shuttle', protect, shuttleRouter);
    router.use('/booking', protect, bookingRouter);
    router.use('/path', protect, pathRouter);
+   router.use('/payment', paymentRouter);
 
    app.use(URL_PREFIX, router);
 
