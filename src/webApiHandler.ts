@@ -22,7 +22,7 @@ export const init = (app: Express) => {
    router.use('/users', userRouter);
    router.use('/shuttle', protect, shuttleRouter);
    router.use('/booking', protect, bookingRouter);
-   router.use('/path', protect, pathRouter);
+   router.use('/path', pathRouter);
    router.use('/payment', paymentRouter);
 
    app.use(URL_PREFIX, router);

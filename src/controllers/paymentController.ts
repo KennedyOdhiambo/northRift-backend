@@ -1,5 +1,4 @@
 import dotenv from 'dotenv';
-import ngrok from 'ngrok';
 import handleError from '../lib/handleError';
 import { Response, Request, NextFunction } from 'express';
 import axios from 'axios';
@@ -37,6 +36,8 @@ export const createToken = async (req: StkRequest, res: Response, next: NextFunc
 
 export const callBack = async (req: Request, res: Response) => {
    try {
+      console.log('I have been reached');
+      console.log('data from callback:', req);
       const data = req.body.Body.stkCallback;
 
       const transaction = {
@@ -65,7 +66,7 @@ export const callBack = async (req: Request, res: Response) => {
 
 export const postStk = async (req: StkRequest, res: Response) => {
    try {
-      const { phone, amount } = req.body;
+      const { customerName, phone, amount, shuttleNumber, bookingDate } = req.body;
       const token = req.token;
       if (!phone) throw new Error('Phone number is required');
       if (!amount) throw new Error('please specify amount');
@@ -83,11 +84,8 @@ export const postStk = async (req: StkRequest, res: Response) => {
          (process.env.MPESA_SHORTCODE as string) + process.env.MPESA_PASSKEY + timestamp
       ).toString('base64');
 
-      const ngrokUrl = await ngrok.connect({
-         addr: 3500,
-         proto: 'http',
-         region: 'sa',
-      });
+      const callbackUrl = `https://8014-102-0-0-243.ngrok-free.app/north-rift/v1/payment/callback`;
+      console.log(callbackUrl);
 
       const data = {
          BusinessShortCode: process.env.MPESA_SHORTCODE,
@@ -98,7 +96,7 @@ export const postStk = async (req: StkRequest, res: Response) => {
          PartyA: phone,
          PartyB: process.env.MPESA_SHORTCODE,
          PhoneNumber: phone,
-         CallBackURL: `${ngrokUrl}/north-rift/v1/payment/callback`,
+         CallBackURL: callbackUrl,
          AccountReference: 'ticket payment',
          TransactionDesc: 'purchase',
       };
@@ -114,7 +112,28 @@ export const postStk = async (req: StkRequest, res: Response) => {
          }
       );
 
-      console.log(response);
+      const {
+         MerchantRequestID,
+         CheckoutRequestID,
+         ResponseCode,
+         ResponseDescription,
+         CustomerMessage,
+      } = response.data;
+
+      const transaction = {
+         merchantRequestID: MerchantRequestID,
+         checkoutRequestID: CheckoutRequestID,
+         responseCode: ResponseCode,
+         responseDescription: ResponseDescription,
+         customerMessage: CustomerMessage,
+         amount: amount,
+         customerPhoneNumber: phone,
+         customerName: customerName,
+         shuttleNumber: shuttleNumber,
+         bookingDate: bookingDate,
+      };
+      const payment = new Payment(transaction);
+      await payment.save();
 
       return res.status(201).json({
          status: Consts.resCodeSuccess,
@@ -122,6 +141,29 @@ export const postStk = async (req: StkRequest, res: Response) => {
       });
    } catch (error) {
       console.log(error);
+      return handleError(error, res);
+   }
+};
+
+export const getPayments = async (req: Request, res: Response) => {
+   try {
+      const { date, shuttleId } = req.query;
+
+      const conditions: { bookingDate?: string; shuttleNumber?: string } = {};
+      if (date) {
+         conditions.bookingDate = date as string;
+      }
+      if (shuttleId) {
+         conditions.shuttleNumber = shuttleId as string;
+      }
+
+      const payments = await Payment.find(conditions);
+
+      return res.status(201).json({
+         status: Consts.resCodeSuccess,
+         data: payments,
+      });
+   } catch (error) {
       return handleError(error, res);
    }
 };

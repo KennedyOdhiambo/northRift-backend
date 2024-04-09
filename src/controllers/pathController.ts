@@ -6,25 +6,24 @@ import { Shuttle } from '../models/shuttleModel';
 
 export const addPath = async (req: Request, res: Response) => {
    try {
-      const { from, destination, farePrice, travelDate, departureTime, shuttleId } = req.body;
+      console.log(req.body);
+      const { from, destination, farePrice, travelDate, shuttleId } = req.body;
 
-      if (!from || !destination || !farePrice || !travelDate || !departureTime || !shuttleId) {
+      if (!from || !destination || !farePrice || !travelDate || !shuttleId) {
          throw new Error(
-            'All fields are required: from, destination, farePrice, travelDate, departureTime, shuttleId'
+            'All fields are required: from, destination, farePrice, travelDate,shuttleId'
          );
       }
 
       const shuttle = await Shuttle.findById(shuttleId);
-      if (!shuttle) {
-         throw new Error('Shuttle not found');
-      }
+      if (!shuttle) throw new Error('Shuttle not found');
 
       const newPath = new Path({
          from,
          destination,
          farePrice,
          travelDate,
-         departureTime,
+
          shuttle: shuttle._id,
       });
 

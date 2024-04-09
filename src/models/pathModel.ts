@@ -23,7 +23,6 @@ const pathSchema = new mongoose.Schema({
 
    departureTime: {
       type: Date,
-      required: true,
    },
 
    availableSeats: {

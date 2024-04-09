@@ -1,15 +1,16 @@
 import mongoose from 'mongoose';
 
 const paymentSchema = new mongoose.Schema({
-   MerchantRequestID: String,
-   CheckoutRequestID: String,
-   ResultCode: Number,
-   ResultDesc: String,
-   Amount: Number,
-   MpesaReceiptNumber: String,
-   Balance: Number,
-   TransactionDate: Date,
-   PhoneNumber: Number,
+   merchantRequestId: String,
+   checkoutRequestId: String,
+   responseCode: Number,
+   responseDescription: String,
+   customerMessage: String,
+   amount: Number,
+   customerPhoneNumber: String,
+   customerName: String,
+   shuttleNumber: String,
+   bookingDate: String,
 });
 
 export const Payment = mongoose.model('Payment', paymentSchema);

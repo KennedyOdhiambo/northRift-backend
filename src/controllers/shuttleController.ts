@@ -79,7 +79,7 @@ export const deleteShuttle = async (req: Request, res: Response) => {
 
 export const listShuttles = async (req: Request, res: Response) => {
    try {
-      const shuttles = await Shuttle.find({ status: 'active' });
+      const shuttles = await Shuttle.find();
 
       return res.status(200).json({
          status: Consts.resCodeSuccess,
